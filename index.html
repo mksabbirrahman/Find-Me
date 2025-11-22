@@ -1,35 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Find Me</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="./styles.css">
-        
-    </head> 
+    </head>
     <body>
-        <div class="container">
-            <div >
-                <h1 class = "header_text">Do you wanna go out with me?</h1>
-                <h1 class = "header_text">Are you free tommorow?</h1>
-            </div>
-            <div class="gif_container">
-                <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDdtZ2JiZDR0a3lvMWF4OG8yc3p6Ymdvd3g2d245amdveDhyYmx6eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Cute animated illustration">
-            </div>
-            <div class = "buttons">
-                <button class="btn" id = "yesButton" onclick="nextPage()">Yes</button>
-                <button class="btn" id="noButton" onmouseover="moveButton()" onclick="moveButton()">No</button>
-                <script>
-                    function nextPage() {
-                        window.location.href = "yes.html";
-                    }
-                    
-                    function moveButton() {
-                        var x = Math.random() * (window.innerWidth - document.getElementById('noButton').offsetWidth) - 85;
-                        var y = Math.random() * (window.innerHeight - document.getElementById('noButton').offsetHeight) - 48;
-                        document.getElementById('noButton').style.left = `${x}px`;
-                        document.getElementById('noButton').style.top = `${y}px`;
-                    }
-                </script> 
-            </div>
-        </div>
-       
-    </body> 
+        <main class="page-wrap">
+            <section class="card" role="main" aria-labelledby="question">
+                <h1 id="question" class="header_text">Do you love me?</h1>
+
+                <div class="gif_container" aria-hidden="true">
+                    <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDdtZ2JiZDR0a3lvMWF4OG8yc3p6Ymdvd3g2d245amdveDhyYmx6eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Cute animated illustration">
+                </div>
+
+                <div class="buttons" id="buttonArea">
+                    <button class="btn btn-yes" id="yesButton" onclick="nextPage()">Yes</button>
+                    <button class="btn btn-no" id="noButton" onmouseover="moveButton()" onclick="moveButton()" aria-label="No, move away">No</button>
+                </div>
+            </section>
+        </main>
+
+        <script>
+            function nextPage() {
+                window.location.href = "yes.html";
+            }
+
+            // On load, move the No button to be a direct child of the card
+            // and make it absolutely positioned relative to the card.
+            document.addEventListener('DOMContentLoaded', () => {
+                const noBtn = document.getElementById('noButton');
+                const card = document.querySelector('.card');
+                if (noBtn && card) {
+                    card.appendChild(noBtn);
+                    noBtn.style.position = 'absolute';
+                    noBtn.style.left = '12px';
+                    noBtn.style.top = '12px';
+                    noBtn.style.pointerEvents = 'auto';
+                }
+            });
+
+            function moveButton() {
+                const card = document.querySelector('.card');
+                const noBtn = document.getElementById('noButton');
+                if (!card || !noBtn) return;
+
+                const area = card.getBoundingClientRect();
+                const btnW = noBtn.offsetWidth;
+                const btnH = noBtn.offsetHeight;
+
+                // padding from edges so the button remains fully visible
+                const padding = 12;
+
+                const maxX = Math.max(0, area.width - btnW - padding * 2);
+                const maxY = Math.max(0, area.height - btnH - padding * 2 - 40); // leave space for header
+
+                const x = Math.floor(Math.random() * maxX) + padding;
+                const y = Math.floor(Math.random() * maxY) + padding + 40;
+
+                noBtn.style.left = `${x}px`;
+                noBtn.style.top = `${y}px`;
+            }
+
+            // Reset position on resize so it's recalculated
+            window.addEventListener('resize', () => {
+                const noBtn = document.getElementById('noButton');
+                if (noBtn) {
+                    noBtn.style.left = '12px';
+                    noBtn.style.top = '12px';
+                }
+            });
+        </script>
+    </body>
 </html>
